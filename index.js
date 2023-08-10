@@ -10,6 +10,8 @@ app.set("view engine", "jsx");
 app.engine("jsx", require("express-react-views").
 createEngine());
 
+app.use(express.json()) //thunderware to get json
+
 // ----------------------------------------------------
 // fruits array - old way
 // const fruits = ['apple', 'banana', 'pear'];
@@ -45,7 +47,9 @@ app.use((req, res, next) => {
 
 // index all fruits
 app.get('/fruits/', (req, res) => {
-    res.render("Index", {fruits: fruits});
+    res.render("Index", {fruits: fruits}); // like <Index fruits={fruits} in REACT
+    // res.json({fruits}) // test thundercloud
+    // res.send(fruits) // test thundercloud
 });
 
 
@@ -59,6 +63,7 @@ app.post('/fruits', (req, res)=>{
     fruits.push(req.body);
     console.log(fruits);
     res.send('data received');
+    // res.json(req.body)
 });
 
 
