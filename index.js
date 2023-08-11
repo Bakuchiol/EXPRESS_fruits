@@ -1,25 +1,24 @@
 // express
 const express = require('express');
+// express variable
+const app = express();
 // mongoose
 const mongoose = require('mongoose');
 // required for .env
 require('dotenv').config()
 
-// express variable
-const app = express();
+
 // import fruits array from models folder
-// const fruits = require('./models/fruits')
+const fruits = require('./models/fruits')
 const Fruit = require('./models/fruit')
 
 
-// middleware
+// middleware -------------------------------------------
 app.set("view engine", "jsx");
 app.engine("jsx", require("express-react-views").
 createEngine());
 
 app.use(express.json()) //thunderware to get json
-
-
 
 // ----------- tells express to use middleware
 app.use(express.urlencoded({extended:false}));
@@ -37,9 +36,9 @@ mongoose.connection.once('open', ()=> {
 
 
 // index all fruits
-app.get('/fruits/', (req, res) => {
-    Fruit.find({}) // we have a model, find all instance of the model
-    .then((allFruits) => {
+app.get('/fruits', (req, res) => {
+    // we have a model, find all instance of the model
+    Fruit.find({}).then((allFruits) => {
         res.render("Index", {
             fruits: allFruits
         });
@@ -61,7 +60,7 @@ app.post('/fruits', async (req, res)=>{
     const newFruit = await Fruit.create(req.body)
     await res.send(newFruit);
     
-    // console.log(fruits);
+    console.log(fruits);
     res.redirect("/fruits")
 
     // fruits.push(req.body);

@@ -13,7 +13,7 @@ function Index(props) {
       {fruits.map((fruit,i)=>{
         return (
             <div key={i}>
-            <a href={`/fruits/${fruit_id}`}>
+            <a href={`/fruits/${fruit._id}`}>
                 <h2>{fruit.name}</h2>
             </a>
             </div>
