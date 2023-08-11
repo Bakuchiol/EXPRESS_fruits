@@ -12,11 +12,11 @@ function Index(props) {
 
       {fruits.map((fruit,i)=>{
         return (
-            <>
-            <a href={`/fruits/${i}`}>
+            <div key={i}>
+            <a href={`/fruits/${fruit_id}`}>
                 <h2>{fruit.name}</h2>
             </a>
-            </>
+            </div>
         );
       })}
     </div>
