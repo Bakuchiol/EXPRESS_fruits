@@ -9,8 +9,12 @@ require('dotenv').config()
 
 
 // import fruits array from models folder
-const fruits = require('./models/fruits')
 const Fruit = require('./models/fruit')
+const fruits = require('./models/fruits')
+
+// veggie tales
+const Vegetable = require('./models/veggie')
+const vegetables = require('./models/veggies')
 
 
 // middleware -------------------------------------------
@@ -48,6 +52,26 @@ app.get('/fruits', (req, res) => {
     // res.send(fruits) // test thundercloud
 });
 
+// ---------------- veggie tales
+app.get('/veggieTale', (req,res) => {
+    res.render("VeggieTale", {vegetables: vegetables})
+})
+
+app.get('/vegetables', async(req,res) => {
+    // res.render("VegIndex", {vegetables:vegetables})
+    // Vegetable.find({}).then((allVeggies) => {
+    //     res.render("VegIndex", {
+    //         vegetables: allVeggies
+    //     })
+    // })
+    
+    const characters = await Vegetable.find({});
+
+})
+
+// const allVeggies = await Vegetable.find({});
+//     res.render("VegIndex", 
+//     {vegetables: allVeggies})
 
 //  ------------------------------------post
 app.post('/fruits', async (req, res)=>{
@@ -61,13 +85,33 @@ app.post('/fruits', async (req, res)=>{
     await res.send(newFruit);
     
     console.log(fruits);
-    res.redirect("/fruits")
+    // res.redirect("/fruits")
 
     // fruits.push(req.body);
     // console.log(fruits);
     // res.send('data received');
     // res.json(req.body)
 });
+
+// ---------------------VEGGIE TALES
+app.post('/vegetables', async(req,res) => {
+    if(req.body.readyToEat === 'on'){
+        req.body.readyToEat = true;
+    }else{
+        req.body.readyToEat = false;
+    }
+    
+    const newVeg = await Vegetable.create(req.body)
+    await res.send(newVeg);
+
+    console.log(vegetables);
+
+    // vegetables.push(req.body);
+    // console.log(vegetables);
+    // res.send('veggie tales complete')
+})
+
+
 
 // ------------------------------------------------------------
 //add show route - each fruit
@@ -87,6 +131,21 @@ app.get('/fruits/:id', async(req, res) => {
     )
 });
 
+// ------------------------ VEGGIE TALES
+app.get('/vegetables/new', (req,res) => {
+    res.render('VegNew')
+})
+
+app.get('/vegetables/:id', async(req,res) => {
+    const eachVeg = await Vegetable.findById(req.params.id)
+    await res.render("Show", 
+    {veggies:eachVeg})
+})
+
+// -------------------------- veggie tales
+app.get('vegTale/new', (req,res) => {
+    res.render('VegTaleNew')
+})
 
 // server
 app.listen('3000', (req,res) => {
