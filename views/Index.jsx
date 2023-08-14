@@ -1,4 +1,6 @@
 import React from 'react'
+// const DefaultLayout = require('../views/layout/Default')
+import DefaultLayout from '../views/layout/Default'
 
 function Index(props) {
 
@@ -6,6 +8,7 @@ function Index(props) {
 
   return (
     <div>
+      <DefaultLayout title={"Fruits Index Page"}>
       <nav>
         <a href="/fruits/new">Create a New Fruit</a>
       </nav>
@@ -16,9 +19,21 @@ function Index(props) {
             <a href={`/fruits/${fruit._id}`}>
                 <h2>{fruit.name}</h2>
             </a>
+
+            {/* edit */}
+            <a href={`/fruits/${fruit._id}/edit`}>Edit This Fruit</a>
+            {/* edit */}
+
+          {/* delete */}
+          <form action={`/fruits/${fruit._id}?_method=DELETE`} method="POST">
+            <input type="submit" value="DELETE"/>
+          </form>
+          {/* delete */}
+
             </div>
         );
       })}
+    </DefaultLayout>
     </div>
   );
 }

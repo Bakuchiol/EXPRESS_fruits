@@ -21,6 +21,8 @@ const vegetables = require('./models/veggies')
 app.set("view engine", "jsx");
 app.engine("jsx", require("express-react-views").
 createEngine());
+// delete
+const methodOverride = require('method-override');
 
 app.use(express.json()) //thunderware to get json
 
@@ -31,6 +33,9 @@ app.use((req, res, next) => {
     console.log('I run for all routes');
     next();
 });
+
+// delete
+app.use(methodOverride('_method'));
 
 // ------------------------------------------- MONGOOSE
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -58,6 +63,11 @@ app.get('/veggieTale', (req,res) => {
 })
 
 app.get('/vegetables', async(req,res) => {
+    const allVeggies = await Vegetable.find({});
+    res.render("VegIndex", 
+    {vegetables: allVeggies})
+
+
     // res.render("VegIndex", {vegetables:vegetables})
     // Vegetable.find({}).then((allVeggies) => {
     //     res.render("VegIndex", {
@@ -123,6 +133,43 @@ app.get('/fruits/new', (req, res) => {
     res.render('New');
 });
 
+// ---------------------- (DELETE)
+app.delete('/fruits/:id', async(req,res) => {
+    // res.send("...deleting")
+    await Fruit.findByIdAndRemove(req.params.id)
+    res.redirect('/fruits')
+})
+
+// ----------------------- (PUT)
+app.put('/fruits/:id', async(req, res)=>{
+    if(req.body.readyToEat === 'on'){
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+    const updatedFruit = await Fruit.findByIdAndUpdate(req.params.id, req.body)
+        res.redirect(`/fruits/${req.params.id}`);
+    });
+
+// ---------------------- (EDIT)
+app.get('/fruits/:id/edit', async(req, res)=>{
+    const foundFruit = await Fruit.findById(req.params.id)
+    res.render('Edit', {
+        fruit: foundFruit
+    })
+    // Fruit.findById(req.params.id, (err, foundFruit)=>{ //find the fruit
+    //   if(!err){
+    //     res.render(
+    // 		  'Edit',
+    // 		{
+    // 			fruit: foundFruit //pass in the found fruit so we can prefill the form
+    // 		}
+    // 	);
+    // } else {
+    //   res.send({ msg: err.message })
+    // }
+    // });
+});
 
 app.get('/fruits/:id', async(req, res) => {
     const eachFruit = await Fruit.findById(req.params.id)
@@ -138,7 +185,7 @@ app.get('/vegetables/new', (req,res) => {
 
 app.get('/vegetables/:id', async(req,res) => {
     const eachVeg = await Vegetable.findById(req.params.id)
-    await res.render("Show", 
+    await res.render("VegShow", 
     {veggies:eachVeg})
 })
 
